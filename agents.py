@@ -1,53 +1,28 @@
+# agents.py
+
 from mesa import Agent
 
 class EcoloidAgent(Agent):
-    def __init__(self, unique_id, model, area, positions):
+    def __init__(self, unique_id, model, tipo, propriedade_tipo, vegetacao_tipo):
         super().__init__(unique_id, model)
-        self.area = area  # Área em módulos fiscais
-        self.tipo = self.classificar_propriedade()
-        self.positions = positions  # Lista de posições que o agente ocupa
-        self.estado = 'inicio'  # Estado inicial
-        self.ciclo = 0  # Ciclos para controlar evolução
+        self.tipo = tipo  # 'ModuloFiscal' ou 'Mata Atlantica'
+        self.propriedade_tipo = propriedade_tipo  # 'latifundio', 'media', 'pequena', 'minifundio', None
+        self.vegetacao_tipo = vegetacao_tipo  # Tipo de vegetação
+        self.biomassa = self.calcular_biomassa()
 
-    def classificar_propriedade(self):
-        if self.area == 1:
-            return 'minifundio'
-        elif self.area == 4:
-            return 'pequena propriedade'
-        elif self.area == 9:
-            return 'media propriedade'
-        elif self.area == 16:
-            return 'latifundio'
-        else:
-            return 'desconhecido'
+    def calcular_biomassa(self):
+        # Valores de biomassa baseados no tipo de vegetação (valores hipotéticos)
+        biomassa_valores = {
+            'soja': 2.5,
+            'cana_de_acucar': 4.0,
+            'diversificada': 3.0,
+            'pastagem': 1.5,
+            'gramineas': 1.0,
+            'terra_limpa': 0.0,
+            'floresta': 5.0
+        }
+        return biomassa_valores.get(self.vegetacao_tipo, 0.0)
 
     def step(self):
-        # Evolução dos estados (pode ser ajustada conforme necessário)
-        self.ciclo += 1
-
-    def advance(self):
-        print(f"Ecoloid {self.unique_id} ({self.tipo}, {self.area} módulos) no estado {self.estado}")
-
-class AreaPreservacaoAgent(Agent):
-    def __init__(self, unique_id, model):
-        super().__init__(unique_id, model)
-        self.estado = 'protegida'
-        self.ciclo = 0
-
-    def step(self):
-        self.ciclo += 1
-
-    def advance(self):
-        print(f"Área de Preservação {self.unique_id} no ciclo {self.ciclo}, estado: {self.estado}")
-
-class ViaComunicacaoAgent(Agent):
-    def __init__(self, unique_id, model):
-        super().__init__(unique_id, model)
-        self.estado = 'ativa'
-        self.ciclo = 0
-
-    def step(self):
-        self.ciclo += 1
-
-    def advance(self):
-        print(f"Via de Comunicação {self.unique_id} no ciclo {self.ciclo}, estado: {self.estado}")
+        # Aqui poderíamos implementar comportamentos futuros do agente
+        pass
